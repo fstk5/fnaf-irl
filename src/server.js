@@ -32,11 +32,19 @@ io.on('connection', (socket) => {
 	console.log('A device connected:', socket.id);
 	
 	// Listen for the Guard winding the box
-	socket.on('wind_box', (data) => {
+	socket.on('boxInteract', (data) => {
 		// Broadcast the new level to the Music Box logic and the Guard UI
-		io.emit('box_level_update', data.newLevel);
+		io.emit('boxIncrease', data.newLevel);
 	});
 });
+
+io.on('playerConnection', (socket) => {
+	console.log('A device connected:', socket.id);
+})
+
+for (socket.id in io) {
+
+}
 
 const PORT = process.env.PORT || 8080;
 http.listen(PORT, () => {

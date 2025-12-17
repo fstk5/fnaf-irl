@@ -1,6 +1,6 @@
 function canMove(aiValue, failedAttempts) {
 	let rng = getRandomInt(0, 20);
-	return rng + 1 - (failedAttempts * 0.2) < aiValue;
+	return rng + 1 <= aiValue;
 }
 
 function getRandomInt(min, max) {
