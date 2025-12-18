@@ -11,7 +11,7 @@
 	    let cameraCount = 0;
 	    let cameraList;
 	    window.addEventListener('load', () => {
-		    var socket = io();
+		    const socket = io();
 		    console.log('broadcasting ready signal..');
 		    socket.emit('ready');
 		    socket.on('URLS', (data) => {
