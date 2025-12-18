@@ -3,8 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Camera View</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="errors/ConnectionError.js"></script>
+    <script src="errors/CameraError.js"></script>
+    <link rel="stylesheet" href="styles/cameras.css">
+    <script>
+	    let cameraCount = 0;
+	    let cameraList;
+	    window.addEventListener('load', () => {
+		    var socket = io();
+		    console.log('broadcasting ready signal..');
+		    socket.emit('ready');
+		    socket.on('URLS', (data) => {
+			    console.log('connection success. data value:', data)
+			    if (data === null) {
+				    throw ConnectionError("Server connection was not able to be established.");
+			    }
+			    cameraList = data;
+			    cameraCount = data.length;
+		    });
+		});
+		
+		function swapCamera(camera = 0) {
+			document.getElementById('camera-stream').src = cameraList[camera];
+			document.getElementById('active-cam-name').innerText = `CAM_${camera+1}`;
+		}
+    </script>
 </head>
 <body>
-
+    <div id="camera-container">
+        <div class="cam-label" id="active-cam-name" onload="swapCamera(0)">CONNECTION TERMINATED</div>
+        <div id="main-view">
+	        <img id="camera-stream" alt="" src="">
+        </div>
+        <div id="map-container">
+	        <img id="map" src="images/camera-view.png" alt="Floorplan of cameras.">
+        </div>
+    </div>
 </body>
 </html>

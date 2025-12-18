@@ -1,9 +1,18 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require('socket.io');
+const io = new Server(server);
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
+
+const rawUrls = process.env.CAMERA_URLS || "";
+const urlArray = rawUrls.split(' ').filter(Boolean);
+const cameraMap = {};
+urlArray.forEach((url, index) => {
+	cameraMap[index] = url;
+})
 
 // 1. Static File Middleware
 // This tells Express to look into the 'public' folder for HTML/CSS/JS files
@@ -27,26 +36,27 @@ app.get('/player', (req, res) => {
 	res.sendFile(path.join(__dirname, 'public/player.html'));
 });
 
-// 3. Socket.io "Flow of Data"
 io.on('connection', (socket) => {
-	console.log('A device connected:', socket.id);
-	
-	// Listen for the Guard winding the box
-	socket.on('boxInteract', (data) => {
-		// Broadcast the new level to the Music Box logic and the Guard UI
-		io.emit('boxIncrease', data.newLevel);
-	});
+	console.log('Guard System connected on ID', socket.id);
+	socket.on('ready', () => {
+		console.log('client ready for data');
+		socket.emit('URLS', cameraMap);
+		console.log('data emitted');
+	})
+	socket.on('disconnect', () => {
+		console.log('Guard System disconnected on ID', socket.id);
+	})
+});
+
+io.on('windBox', (data) => {
+	io.emit('200', data.windBox);
 });
 
 io.on('playerConnection', (socket) => {
 	console.log('A device connected:', socket.id);
 })
 
-for (socket.id in io) {
-
-}
-
 const PORT = process.env.PORT || 8080;
-http.listen(PORT, () => {
+server.listen(PORT, () => {
 	console.log(`FNAF Server running at http://localhost:${PORT}`);
 });
