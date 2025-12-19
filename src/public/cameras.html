@@ -11,6 +11,7 @@
 		    const socket = io();
 		    let cameraCount = 0;
 		    let cameraList;
+			let timerId;
 			let boxTimer = 20.0;
 		    const MAP_COORDINATES = {
 			    '0': { top: '33%', left: '8%' },
@@ -80,11 +81,23 @@
 				}
 			}
 		    function windBox() {
-				if (boxTimer <= 0) {
-					socket.emit('boxTimerRanOut')
-				}
+			    boxTimer = Math.min(20.0, boxTimer + 0.5);
 		    }
 			function startGame() {
+				if (timerId) clearInterval(timerId);
+				
+				timerId = setInterval(function () {
+					boxTimer -= 0.5;
+					
+					if (boxTimer <= 0) {
+						boxTimer = 0;
+						clearInterval(timerId);
+						timerId = null;
+						socket.emit('boxTimerRanOut');
+					}
+					
+					console.log("Remaining:", boxTimer);
+				}, 500);
 				socket.emit('startGame');
 				document.getElementById('start').style.display = 'none';
 				swapCamera(0);
@@ -95,10 +108,10 @@
 	    <div id="camera-container">
 	        <div class="cam-label" id="active-cam-name">
 		        <p>CONNECTION TERMINATED</p>
-		        <button id="start" onclick="startGame()">REATTEMPT CONNECTION</button>
+		        <button id="start" onclick="startGame()">REATTEMPT CONNECTION?</button>
 	        </div>
 		    <div id="music-box" style="display: none">
-			    <button id="windMusicBox" onclick="windBox()">Wind Box</button>
+			    <button id="windMusicBox" onclick="windBox()">WIND BOX</button>
 			    <div id="musicBoxProgress"></div>
 		    </div>
 	        <div id="main-view">
