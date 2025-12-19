@@ -38,29 +38,29 @@ app.get('/player', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-	console.log('Guard System connected on ID', socket.id);
-	socket.on('ready', () => {
-		console.log('client ready for data');
-		socket.emit('URLS', cameraMap);
-		console.log('data emitted');
-	});
+	console.log('Device connected, waiting for page declaration. ID ', socket.id);
 	socket.on('startGame', () => {
 		isGameStarted = true;
+		io.emit('gameStarted');
 	});
-	socket.on('disconnect', () => {
-		console.log('Guard System disconnected on ID', socket.id);
+	socket.on('cameraPageConnection', () => {
+		console.log('Device Guard computer connected on ID ', socket.id);
+		socket.on('ready', () => {
+			console.log('client ready for data');
+			socket.emit('URLS', cameraMap);
+			console.log('data emitted');
+		});
+		socket.on('disconnect', () => {
+			console.log('Guard computer disconnected from ID ', socket.id);
+		});
 	})
+	socket.on('musicBoxConnection', () => {
+		console.log('Device Music box connected on ID ', socket.id);
+		socket.on('disconnect', () => {
+			console.log('Music box disconnected from ID ', socket.id);
+		});
+	});
 });
-
-
-const musicBoxTimer = 20000;
-const musicBoxTimerFunc = setInterval(() => {
-	if (isGameStarted) {
-		if (musicBoxTimer <= 0) {
-			io.emit('stopMusic');
-		}
-	}
-}, 500);
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
