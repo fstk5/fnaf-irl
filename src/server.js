@@ -7,14 +7,13 @@ const { Server } = require('socket.io');
 const io = new Server(server);
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
+let isGameStarted = false;
 const rawUrls = process.env.CAMERA_URLS || "";
 const urlArray = rawUrls.split(' ').filter(Boolean);
 const cameraMap = {};
 urlArray.forEach((url, index) => {
 	cameraMap[index] = url;
 });
-
-let boxTimer = 20000;
 
 // 1. Static File Middleware
 // This tells Express to look into the 'public' folder for HTML/CSS/JS files
@@ -45,14 +44,23 @@ io.on('connection', (socket) => {
 		socket.emit('URLS', cameraMap);
 		console.log('data emitted');
 	});
+	socket.on('startGame', () => {
+		isGameStarted = true;
+	});
 	socket.on('disconnect', () => {
 		console.log('Guard System disconnected on ID', socket.id);
 	})
 });
 
-io.on('playerConnection', (socket) => {
-	console.log('A device connected:', socket.id);
-})
+
+const musicBoxTimer = 20000;
+const musicBoxTimerFunc = setInterval(() => {
+	if (isGameStarted) {
+		if (musicBoxTimer <= 0) {
+			io.emit('stopMusic');
+		}
+	}
+}, 500);
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
