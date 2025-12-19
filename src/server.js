@@ -12,7 +12,9 @@ const urlArray = rawUrls.split(' ').filter(Boolean);
 const cameraMap = {};
 urlArray.forEach((url, index) => {
 	cameraMap[index] = url;
-})
+});
+
+let boxTimer = 20000;
 
 // 1. Static File Middleware
 // This tells Express to look into the 'public' folder for HTML/CSS/JS files
@@ -42,14 +44,10 @@ io.on('connection', (socket) => {
 		console.log('client ready for data');
 		socket.emit('URLS', cameraMap);
 		console.log('data emitted');
-	})
+	});
 	socket.on('disconnect', () => {
 		console.log('Guard System disconnected on ID', socket.id);
 	})
-});
-
-io.on('windBox', (data) => {
-	io.emit('200', data.windBox);
 });
 
 io.on('playerConnection', (socket) => {

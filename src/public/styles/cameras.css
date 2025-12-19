@@ -50,10 +50,31 @@ body {
     pointer-events: none; /* Allows clicking through the scanlines */
     z-index: 10;
 }
+/* This is required for the .style.top/left in JS to work */
+.room-hitbox {
+    position: absolute;
+    width: 40px;
+    height: 30px;
+    background-color: rgba(0, 0, 0, 1);
+    border: 1px solid gray;
+    color: #ffffff;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    transition: all 0.2s ease;
+}
+
+/* The Active state - applied via JavaScript */
+.room-hitbox.active {
+    background-color: green;
+    color: #000000;
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 10px #00ff00;
+}
 
 /* The Interactive Map Container */
 #map-container {
-    position: absolute;
+    position: relative;
+    display: inline-block;
     bottom: 20px;
     right: 20px;
     width: 300px;

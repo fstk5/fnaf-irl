@@ -1,44 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Camera View</title>
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <script src="errors/ConnectionError.js"></script>
-    <script src="errors/CameraError.js"></script>
-    <link rel="stylesheet" href="styles/cameras.css">
-    <script>
-	    let cameraCount = 0;
-	    let cameraList;
-	    window.addEventListener('load', () => {
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Camera View</title>
+	    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+	    <script src="errors/ConnectionError.js"></script>
+	    <script src="errors/CameraError.js"></script>
+	    <link rel="stylesheet" href="styles/cameras.css">
+	    <script>
 		    const socket = io();
-		    console.log('broadcasting ready signal..');
-		    socket.emit('ready');
-		    socket.on('URLS', (data) => {
-			    console.log('connection success. data value:', data)
-			    if (data === null) {
-				    throw ConnectionError("Server connection was not able to be established.");
-			    }
-			    cameraList = data;
-			    cameraCount = data.length;
-		    });
-		});
-		
-		function swapCamera(camera = 0) {
-			document.getElementById('camera-stream').src = cameraList[camera];
-			document.getElementById('active-cam-name').innerText = `CAM_${camera+1}`;
-		}
-    </script>
-</head>
-<body>
-    <div id="camera-container">
-        <div class="cam-label" id="active-cam-name" onload="swapCamera(0)">CONNECTION TERMINATED</div>
-        <div id="main-view">
-	        <img id="camera-stream" alt="" src="">
-        </div>
-        <div id="map-container">
-	        <img id="map" src="images/camera-view.png" alt="Floorplan of cameras.">
-        </div>
-    </div>
-</body>
+		    let cameraCount = 0;
+		    let cameraList;
+		    const MAP_COORDINATES = {
+			    '0': { top: '33%', left: '8%' },
+			    '1': { top: '10%', left: '95%' },
+			    '2': { top: '20%', left: '60%' },
+			    '3': { top: '70%', left: '35%' },
+			    '4': { top: '70%', left: '60%' },
+			    '5': { top: '38%', left: '70%' },
+			    '6': { top: '40%', left: '30%' },
+			    '7': { top: '10%', left: '30%' }
+		    };
+		    window.addEventListener('load', () => {
+			    console.log('broadcasting ready signal..');
+			    socket.emit('ready');
+			    socket.on('URLS', (data) => {
+				    console.log('connection success. data value:', data)
+				    if (data === null) {
+					    throw ConnectionError("Server connection was not able to be established.");
+				    }
+				    cameraList = data;
+				    cameraCount = data.length;
+				    
+				    const layer = document.getElementById('interactive-overlay');
+				    layer.innerHTML = ''; // Clear existing overlays
+				    
+				    Object.keys(cameraList).forEach((camKey, index) => {
+					    // Create the clickable room overlay
+					    const room = document.createElement('div');
+					    room.className = 'room-hitbox';
+					    room.id = `hitbox-${camKey}`;
+						
+					    // Use your MAP_COORDINATES to position it
+					    if (MAP_COORDINATES[index]) {
+						    room.style.top = MAP_COORDINATES[index].top;
+						    room.style.left = MAP_COORDINATES[index].left;
+					    }
+					    
+					    // Add a label inside the hitbox (Optional, like FNAF 2)
+					    room.innerText = `CAM_0${index + 1}`;
+					    
+					    // When clicked, swap the camera stream
+					    room.onclick = () => swapCamera(index);
+					    
+					    layer.appendChild(room);
+				    });
+			    });
+			});
+			function swapCamera(camera = 0) {
+				document.getElementById('camera-stream').src = cameraList[camera];
+				document.getElementById('active-cam-name').innerText = `CAM_0${camera+1}`;
+				
+				const allHitboxes = document.querySelectorAll('.room-hitbox');
+				allHitboxes.forEach(box => box.classList.remove('active'));
+				
+				// 3. Add 'active' class to the current one
+				const activeBox = document.getElementById(`hitbox-${camera}`);
+				if (activeBox) {
+					activeBox.classList.add('active');
+				}
+				if (camera === 0) {
+					document.getElementById('music-box').style.display = 'block'; // Show it
+				} else {
+					document.getElementById('music-box').style.display = 'none';  // Hide it for all other cameras
+				}
+			}
+		    function windBox() {
+				
+		    }
+			function startGame() {
+				socket.emit('startGame');
+			}
+	    </script>
+	</head>
+	<body>
+	    <div id="camera-container">
+	        <div class="cam-label" id="active-cam-name" onclick="startGame()">SYSTEM NOT INITIALIZED. INIT NOW?</div>
+		    <div id="music-box" style="display: none">
+			    <button id="windMusicBox" onclick="windBox()">Wind Box</button>
+			    <div id="musicBoxProgress"></div>
+		    </div>
+	        <div id="main-view">
+		        <img id="camera-stream" alt="" src="">
+	        </div>
+	        <div id="map-container">
+		        <img id="map" src="images/camera-view.png" alt="Floorplan of cameras.">
+		        <div id="interactive-overlay"></div>
+	        </div>
+	    </div>
+	</body>
 </html>
