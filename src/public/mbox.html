@@ -10,10 +10,13 @@
 			console.log('loaded');
 			console.log('emitting music box connection..');
 			socket.emit('musicBoxConnection');
+			socket.on('boxTimerRanOut', () => {
+				document.getElementById('mboxaudio').pause();
+			});
 		};
 	</script>
 </head>
 <body>
-
+	<audio autoplay loop muted src="audio/musicbox.mp3" type="audio/mpeg" id="mboxaudio"></audio>
 </body>
 </html>
