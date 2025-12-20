@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+	<title>Music Box Page</title>
+	<script>
+		const socket = io();
+		window.onload = function () {
+			console.log('loaded');
+			console.log('emitting music box connection..');
+			socket.emit('musicBoxConnection');
+		};
+	</script>
+</head>
+<body>
+
+</body>
+</html>

@@ -50,6 +50,9 @@ io.on('connection', (socket) => {
 			socket.emit('URLS', cameraMap);
 			console.log('data emitted');
 		});
+		socket.on('boxTimerRanOut', () => {
+			io.emit('boxTimerRanOut');
+		});
 		socket.on('disconnect', () => {
 			console.log('Guard computer disconnected from ID ', socket.id);
 		});
