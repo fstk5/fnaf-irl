@@ -22,30 +22,26 @@ window.addEventListener('load', () => {
 	socket.on('URLS', (data) => {
 		console.log('connection success. data value:', data)
 		if (data === null) {
-			throw ConnectionError("Server connection was not able to be established.");
+			throw Error("Server connection was not able to be established.");
 		}
 		cameraList = data;
 		cameraCount = data.length;
 		
 		const layer = document.getElementById('interactive-overlay');
-		layer.innerHTML = ''; // Clear existing overlays
+		layer.innerHTML = '';
 		
 		Object.keys(cameraList).forEach((camKey, index) => {
-			// Create the clickable room overlay
 			const room = document.createElement('div');
 			room.className = 'room-hitbox';
 			room.id = `hitbox-${camKey}`;
 			
-			// Use your MAP_COORDINATES to position it
 			if (MAP_COORDINATES[index]) {
 				room.style.top = MAP_COORDINATES[index].top;
 				room.style.left = MAP_COORDINATES[index].left;
 			}
 			
-			// Add a label inside the hitbox (Optional, like FNAF 2)
 			room.innerText = `CAM_0${index + 1}`;
 			
-			// When clicked, swap the camera stream
 			room.onclick = () => swapCamera(index);
 			
 			layer.appendChild(room);
@@ -59,8 +55,7 @@ function swapCamera(camera = 0) {
 	
 	const allHitboxes = document.querySelectorAll('.room-hitbox');
 	allHitboxes.forEach(box => box.classList.remove('active'));
-	
-	// 3. Add 'active' class to the current one
+	socket.emit('currentCamera', `CAM_0${camera + 1}`);
 	const activeBox = document.getElementById(`hitbox-${camera}`);
 	if (activeBox) {
 		activeBox.classList.add('active');

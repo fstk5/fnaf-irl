@@ -3,9 +3,9 @@ const path = require('path');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const { Server } = require('socket.io');
+const {Server} = require('socket.io');
 const io = new Server(server);
-require('dotenv').config({ path: path.join(__dirname, '../.env') });
+require('dotenv').config({path: path.join(__dirname, '../.env')});
 
 let isGameStarted = false;
 const rawUrls = process.env.CAMERA_URLS || "";
@@ -15,12 +15,7 @@ urlArray.forEach((url, index) => {
 	cameraMap[index] = url;
 });
 
-// 1. Static File Middleware
-// This tells Express to look into the 'public' folder for HTML/CSS/JS files
 app.use(express.static(path.join(__dirname, 'public')));
-
-// 2. Routing Logic
-// Defining specific endpoints for your three main views
 
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, 'public/index.html'));
@@ -37,6 +32,10 @@ app.get('/player', (req, res) => {
 	res.sendFile(path.join(__dirname, 'public/player.html'));
 });
 
+app.get('/camera', (req, res) => {
+	res.sendFile(path.join(__dirname, 'public/camera.html'));
+})
+
 io.on('connection', (socket) => {
 	console.log('Device connected, waiting for page declaration. ID ', socket.id);
 	socket.on('startGame', () => {
@@ -50,6 +49,9 @@ io.on('connection', (socket) => {
 			socket.emit('URLS', cameraMap);
 			console.log('data emitted');
 		});
+		socket.on('currentCamera', (data) => {
+			io.emit('currentCamera', data);
+		});
 		socket.on('boxTimerRanOut', () => {
 			io.emit('boxTimerRanOut');
 		});
@@ -57,6 +59,9 @@ io.on('connection', (socket) => {
 			console.log('Guard computer disconnected from ID ', socket.id);
 		});
 	})
+	socket.on('cameraConnected', (data) => {
+		console.log(`Camera ${data} connected on ID ${socket.id}`);
+	});
 	socket.on('musicBoxConnection', () => {
 		console.log('Device Music box connected on ID ', socket.id);
 		socket.on('disconnect', () => {
