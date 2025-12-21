@@ -34,7 +34,11 @@ app.get('/player', (req, res) => {
 
 app.get('/camera', (req, res) => {
 	res.sendFile(path.join(__dirname, 'public/camera.html'));
-})
+});
+
+app.get('/dev', (req, res) => {
+	res.sendFile(path.join(__dirname, 'public/dev.html'));
+});
 
 io.on('connection', (socket) => {
 	console.log('Device connected, waiting for page declaration. ID ', socket.id);
