@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Dev Page</title>
+	<script src="https://cdn.socket.io/4.7.2/socket.io.min.js">
+		const socket = io.connect();
+	</script>
+</head>
+<body>
+	<button onclick="socket.emit('boxTimerRanOut')">Stop Music Box</button>
+</body>
+</html>
