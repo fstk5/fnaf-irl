@@ -3,20 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+	<script src="scripts/mbox.js"></script>
 	<title>Music Box Page</title>
-	<script>
-		const socket = io();
-		window.onload = function () {
-			console.log('loaded');
-			console.log('emitting music box connection..');
-			socket.emit('musicBoxConnection');
-			socket.on('boxTimerRanOut', () => {
-				document.getElementById('mboxaudio').pause();
-			});
-		};
-	</script>
 </head>
 <body>
-	<audio autoplay loop muted src="audio/musicbox.mp3" type="audio/mpeg" id="mboxaudio"></audio>
+<audio autoplay id="mboxaudio" loop src="audio/musicbox.mp3"></audio>
 </body>
 </html>
