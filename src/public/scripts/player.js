@@ -4,6 +4,7 @@ let dataElement1;
 let dataElement2;
 let dataElement3;
 let aiValue;
+let lastAttemptTime = 0;
 window.addEventListener('load', () => {
 	socket.emit('playerConnected');
 	dataElement1 = document.getElementById('data1');
@@ -14,6 +15,12 @@ window.addEventListener('load', () => {
 });
 
 function attemptMove() {
+	const now = Date.now();
+	if (now - lastAttemptTime < 5000) {
+		dataElement2.textContent = `Cooldown active. Wait ${Math.ceil((5000 - (now - lastAttemptTime)) / 1000)} seconds.`;
+		return;
+	}
+	lastAttemptTime = now;
 	if (canMove(aiValue, failedMovements)) {
 		dataElement1.textContent = `Failed Attempts: ${failedMovements}`;
 		dataElement2.textContent = `Movement attempt FAILED!`;
