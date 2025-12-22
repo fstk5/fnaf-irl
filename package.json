@@ -1,14 +1,14 @@
 {
   "name": "fnaf-irl",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "A multiplayer FNAF game with cameras and your friends as the animatronics.",
   "main": "src/server.js",
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["fnaf", "five nights at freddys", "multiplayer", "game"],
+  "author": "fstk5",
   "license": "ISC",
   "packageManager": "pnpm@10.26.1",
   "dependencies": {
