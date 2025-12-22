@@ -2,7 +2,7 @@ const socket = io();
 let cameraCount = 0;
 let cameraList;
 let timerId;
-let boxTimer = 20.0;
+let boxTimer = 45.0;
 const MAP_COORDINATES = {
 	'0': {top: '33%', left: '8%'},
 	'1': {top: '10%', left: '95%'},
@@ -68,7 +68,7 @@ function swapCamera(camera = 0) {
 }
 
 function windBox() {
-	boxTimer = Math.min(20.0, boxTimer + 0.5);
+	boxTimer = Math.min(45.0, boxTimer + 0.5);
 	console.log(boxTimer);
 }
 

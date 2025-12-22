@@ -22,11 +22,12 @@ function attemptMove() {
 	}
 	lastAttemptTime = now;
 	if (canMove(aiValue, failedMovements)) {
-		dataElement1.textContent = `Failed Attempts: ${failedMovements}`;
-		dataElement2.textContent = `Movement attempt FAILED!`;
+		dataElement2.textContent = 'Movement attempt SUCCESS!';
 		failedMovements = 0;
+		dataElement1.textContent = `Failed Attempts: ${failedMovements}`;
 	} else {
 		failedMovements++;
-		dataElement2.textContent = `Failed Attempts: ${failedMovements}`;
+		dataElement1.textContent = `Failed Attempts: ${failedMovements}`;
+		dataElement2.textContent = 'Movement attempt FAILED!';
 	}
 }

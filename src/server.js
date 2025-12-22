@@ -40,6 +40,10 @@ app.get('/dev', (req, res) => {
 	res.sendFile(path.join(__dirname, 'public/dev.html'));
 });
 
+app.get('/favicon.ico', (req, res) => {
+	res.sendFile(path.join(__dirname, 'public/favicon.ico'));
+});
+
 io.on('connection', (socket) => {
 	console.log('Device connected, waiting for page declaration. ID ', socket.id);
 	socket.on('startGame', () => {
@@ -55,6 +59,7 @@ io.on('connection', (socket) => {
 		});
 		socket.on('currentCamera', (data) => {
 			io.emit('currentCamera', data);
+			console.log('current camera changed to ', data);
 		});
 		socket.on('boxTimerRanOut', () => {
 			io.emit('boxTimerRanOut');
@@ -71,6 +76,9 @@ io.on('connection', (socket) => {
 		socket.on('disconnect', () => {
 			console.log('Music box disconnected from ID ', socket.id);
 		});
+	});
+	socket.on('boxTimerRanOut', () => {
+		io.emit('boxTimerRanOut');
 	});
 });
 
