@@ -1,5 +1,30 @@
 # fnaf-irl
 
+| Category | Information |
+| :--- | :--- |
+| **License** | [GPLv2](LICENSE) (Code Only) |
+| **Features & Code Overview** | Node.js, pnpm, MJPEG Streams |
+| **Platform** | Broser-based, Node.js for server |
+| **Status** | Barebones/Functional |
+
+## License
+
+[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](LICENSE)
+
+### Software
+All source code in this repository (including `.js`, `.html`, and `.css` files) is licensed under the **GNU General Public License v2.0**. 
+
+### Assets
+Note that this license **does not** apply to non-code media assets. All audio and image files are reserved by their respective copyright holders and are not covered by the GPLv2.
+
+See the [LICENSE](LICENSE) file for the full license text.
+
+---
+Copyright (c) 2026 fstk5
+
+## Contributing
+Feel free to fork and add your own features or improvements, but it would be greatly appreciated if you could open a PR to update the main code as well :).
+
 ## Overview
 
 fnaf-irl is a project I started working on and finished in like.. 5 days?
@@ -42,5 +67,10 @@ On the devices being used as cameras, have them exporting an MJPEG stream and se
 Also, open `https://<computer-ip>:8080/camera` to have audio play when it is active.
 On the music box webcam, also open `https://<computer-ip>:8080/mbox` for the audio to work.
 
-## Contributing
-Feel free to fork and add your own features or improvements, but it would be greatly appreciated if you could open a PR to update the main code as well :).
+## Disclaimer
+
+This is a non-profit, fan-made project. **fnaf-irl** is not affiliated with, authorized, maintained, sponsored, or endorsed by Scott Cawthon or any of his affiliates.
+
+* **Intellectual Property:** *Five Nights at Freddy's*, its characters, names, sounds, and related assets are the property of Scott Cawthon and/or their respective owners.
+* **Non-Commercial Use:** This project is intended for personal and educational enjoyment only. It may not be sold or used for commercial purposes.
+* **No Copyright Infringement Intended:** All rights to the original franchise materials are reserved by the original creators. If you are a rights holder and wish for any content to be removed, please contact me through GitHub.
